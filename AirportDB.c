@@ -51,7 +51,7 @@ void initData(char *fileName) {
 		
 			
 			char *token;
-			char delim[3] = ",\" ";
+			char delim[3] = ",\"";
 			char noInfoString[2] = "na";
 			
 			for (i = 0 ; i < numLines; i++) {
@@ -71,7 +71,11 @@ void initData(char *fileName) {
 						strcpy(airportArr[i].country, token);
 						
 					token = strtok(NULL, delim);
-						strcpy(airportArr[i].IATA, token);
+						if (strcmp(token, "\\N") == 0) {
+							strcpy(airportArr[i].IATA, noInfoString); 
+						} else {
+							strcpy(airportArr[i].IATA, token); 
+						}
 						
 					token = strtok(NULL, delim);
 						strcpy(airportArr[i].ICAO, token);
@@ -92,7 +96,11 @@ void initData(char *fileName) {
 						airportArr[i].timezone = atoi(timezoneString);	
 						
 					token = strtok(NULL, delim);
-						strcpy(airportArr[i].DST, token);
+						if (strcmp(token, "\\N") == 0) {
+							strcpy(airportArr[i].DST, noInfoString); 
+						} else {
+							strcpy(airportArr[i].DST, token); 
+						}
 						
 					token = strtok(NULL, delim);
 						if (strcmp(token, "\\N") == 0) {
