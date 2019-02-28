@@ -95,21 +95,21 @@ void initData(char *fileName) {
 						strcpy(airportArr[i].DST, token);
 						
 					token = strtok(NULL, delim);
-						if (token == "\N") {
+						if (strcmp(token, "\\N") == 0) {
 							strcpy(airportArr[i].olsenTimezone, noInfoString); 
 						} else {
 							strcpy(airportArr[i].olsenTimezone, token); 
 						}
 
 					token = strtok(NULL, delim);
-						if (token == "\N") {
+						if (strcmp(token, "\\N") == 0) {
 							strcpy(airportArr[i].type, noInfoString); 
 						} else {
 							strcpy(airportArr[i].type, token); 
 						}
 					
 					token = strtok(NULL, delim);
-						if (token == "\N") {
+						if (strcmp(token, "\\N") == 0) {
 							strcpy(airportArr[i].source, noInfoString); 
 						} else {
 							strcpy(airportArr[i].source, token); 
