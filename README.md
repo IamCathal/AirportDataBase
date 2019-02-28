@@ -1,2 +1,2 @@
 # AirportDataBase
-A parser for a database of global airport information I found.
+A parser for a database of global airport information.

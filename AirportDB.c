@@ -7,7 +7,7 @@ struct airport {
 		char name[30];
 		char city[30];
 		char country[40];
-		char IATA[4];
+		char IATA[5];
 		char ICAO[5];
 		double latitude;
 		double longitude;
@@ -21,8 +21,6 @@ struct airport {
 };
 
 struct airport airportArr[7543];
-
-struct airport *first, *current, *last;
 
 
 void initData(char *fileName) {
@@ -46,13 +44,15 @@ void initData(char *fileName) {
 			}
 		}
 		
+		
 		rewind(fptr);
 		
 		printf("There are %d lines in the file\n", numLines);
 		
 			
 			char *token;
-			char delim[2] = ",\"";
+			char delim[3] = ",\" ";
+			char noInfoString[2] = "na";
 			
 			for (i = 0 ; i < numLines; i++) {
 				
@@ -94,12 +94,47 @@ void initData(char *fileName) {
 					token = strtok(NULL, delim);
 						strcpy(airportArr[i].DST, token);
 						
+					token = strtok(NULL, delim);
+						if (token == "\N") {
+							strcpy(airportArr[i].olsenTimezone, noInfoString); 
+						} else {
+							strcpy(airportArr[i].olsenTimezone, token); 
+						}
+
+					token = strtok(NULL, delim);
+						if (token == "\N") {
+							strcpy(airportArr[i].type, noInfoString); 
+						} else {
+							strcpy(airportArr[i].type, token); 
+						}
+					
+					token = strtok(NULL, delim);
+						if (token == "\N") {
+							strcpy(airportArr[i].source, noInfoString); 
+						} else {
+							strcpy(airportArr[i].source, token); 
+						}
+						
+				printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+						airportArr[i].ID, 
+						airportArr[i].name,
+						airportArr[i].city,
+						airportArr[i].country, 
+						airportArr[i].IATA, 
+						airportArr[i].ICAO,
+						airportArr[i].latitude, 
+						airportArr[i].longitude, 
+						airportArr[i].altitude,
+						airportArr[i].timezone, 
+						airportArr[i].DST, 
+						airportArr[i].olsenTimezone,
+						airportArr[i].type, 
+						airportArr[i].source);
+						
 			}
 			
 		
 		
-		
-	
 					
 		} 
 
