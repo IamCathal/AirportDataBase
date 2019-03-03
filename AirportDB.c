@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 struct airport {
 		int ID;
@@ -22,8 +23,10 @@ struct airport {
 
 struct airport airportArr[7543];
 
+struct airport *first, *current, *last;
 
-void initData(char *fileName) {
+
+int intakeData(char *fileName) {
 	
 	  FILE *fptr;
 	  fptr = fopen(fileName, "r");
@@ -47,7 +50,7 @@ void initData(char *fileName) {
 		
 		rewind(fptr);
 		
-		printf("There are %d lines in the file\n", numLines);
+		//printf("There are %d lines in the file\n", numLines);
 		
 			
 			char *token;
@@ -123,7 +126,89 @@ void initData(char *fileName) {
 							strcpy(airportArr[i].source, token); 
 						}
 						
-				printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+			/*	printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+						airportArr[i].ID, 
+						airportArr[i].name,
+						airportArr[i].city,
+						airportArr[i].country, 
+						airportArr[i].IATA, 
+						airportArr[i].ICAO,
+						airportArr[i].latitude, 
+						airportArr[i].longitude, 
+						airportArr[i].altitude,
+						airportArr[i].timezone, 
+						airportArr[i].DST, 
+						airportArr[i].olsenTimezone,
+						airportArr[i].type, 
+						airportArr[i].source); */
+						
+			}
+			
+			return numLines;
+			fclose(fptr);
+					
+		} 
+}
+
+
+/*	int binaryData(char *fileName, int numLines) {
+		
+		FILE *fptr;
+		int i;
+		
+		fptr = fopen("airportDBDAT.dat", "wb+");
+			
+				for (i = 0; i < numLines; i++) {
+					fwrite(&airportArr[i], sizeof(struct airport), 1, fptr);
+				}
+				
+				fclose(fptr);
+				
+				fptr = fopen("airportDBDAT.dat", "rb");
+		
+				first = current = last = NULL;
+				i = 0;
+				
+				while (!feof(fptr)) {
+					current = (struct airport*) malloc ( sizeof( struct airport ) );
+					
+					fread(current, sizeof( struct airport ), 1, fptr);
+					i++;
+					
+					if (first == NULL) {
+						first = last;
+						current = last;
+					}
+					
+					else {
+						if ( i = (numLines - 1) )
+						last->next = current;
+						last = current;
+						current->next = NULL;
+					}
+				}	
+			
+				//printf("\nCurrent name: %s", first->ID);
+				printf("yuppa");
+		
+				
+	}   */
+	
+		int searchById(int numLines) {
+			
+			int userInput = 1;
+			int i;
+		
+			printf("****************************************");
+			
+			while (userInput != 0) {
+				
+				printf("\nEnter an ID to search: ");
+				scanf("%d", &userInput);
+				
+				for (i = 0; i < numLines; i++ ) {
+					if (airportArr[i].ID == userInput) {
+						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
 						airportArr[i].ID, 
 						airportArr[i].name,
 						airportArr[i].city,
@@ -138,27 +223,37 @@ void initData(char *fileName) {
 						airportArr[i].olsenTimezone,
 						airportArr[i].type, 
 						airportArr[i].source);
+						printf("\n****************************************");
 						
-			}
+					}
+				}
+			} 
 			
-		
-		
-					
-		} 
-
-}
-	  
-
+			
+			
+		}
 	
-	
-
-
 
 	void main() {
 		
 		char file[] = "airportstext.txt";
+		char datFile[] = "airportDBDAT.dat";
+		int option;
 		
-		initData(file);
+		intakeData(file);
+		int lineCount = intakeData(file);
+		
+		//binaryData(datFile, lineCount);
+		
+		printf("Please select a function:\n");
+		printf("1. Search by ID\n");
+		
+		printf("Which search would you like to use: ");
+		scanf("%d", &option);
+		
+			switch (option) {
+				case 1:	searchById(lineCount);
+			}
 		
 	}
 	
