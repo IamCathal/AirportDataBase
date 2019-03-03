@@ -197,7 +197,7 @@ int intakeData(char *fileName) {
 		int searchById(int numLines) {
 			
 			int userInput = 1;
-			int i;
+			int i, found = 0;
 		
 			printf("****************************************");
 			
@@ -224,13 +224,22 @@ int intakeData(char *fileName) {
 						airportArr[i].type, 
 						airportArr[i].source);
 						printf("\n****************************************");
+						found = 1;
 						
+					}
+					
+					if ( i == (numLines - 1) && found == 0) {
+						printf("No airport with ID \"%d\" found.\n", userInput);
 					}
 				}
 			} 
 			
 			
 			
+		}
+		
+		int searchByName(int numLines) {
+			printf("\nYuppa search by name");
 		}
 	
 
@@ -245,14 +254,16 @@ int intakeData(char *fileName) {
 		
 		//binaryData(datFile, lineCount);
 		
-		printf("Please select a function:\n");
+
 		printf("1. Search by ID\n");
+		printf("2. Search by name\n");
 		
-		printf("Which search would you like to use: ");
+		printf("\nWhich search would you like to use: ");
 		scanf("%d", &option);
 		
 			switch (option) {
 				case 1:	searchById(lineCount);
+				case 2: searchByName(lineCount);
 			}
 		
 	}
