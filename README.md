@@ -1,4 +1,4 @@
-#AirportDataBase
+# AirportDataBase
 A program to parse and provide search functions for a database file on airports.
 
 I am using a database file from [OpenFlights](https://openflights.org/data.html) that is a global database of over 10,000 airports worldwide. It has such information such as it's name, country, it's IATA identifying code, latitude and longitude and various timezone information. 
