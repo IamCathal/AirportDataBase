@@ -26,6 +26,7 @@ struct airport airportArr[7543];
 struct airport *first, *current, *last;   
 
 int numLines = 0;
+int opened = 0;
 
 
 int intakeData(char *fileName) {
@@ -204,7 +205,7 @@ int intakeData(char *fileName) {
 			
 			while (userInput != 0) {
 				
-				printf("\nEnter an ID to search: ");
+				printf("\nEnter an ID to search(0 to exit): ");
 				scanf("%d", &userInput);
 				found = 0;
 				
@@ -229,15 +230,19 @@ int intakeData(char *fileName) {
 						found = 1;	
 					}
 				}
+					
 				
-					if ( i == numLines && found != 1) {
-						printf("\nNo airport with ID \"%d\" found.\n", userInput);
-					}
+					if ( i == numLines && found != 1) { 
+						if (userInput == 0) {
+							searchMenu();
+						} 	else {
+							printf("\nNo airport with ID \"%d\" found.\n", userInput);
+						}
+						
+						
+					}	
 			} 
-			
-			
-			
-		}
+	}
 		
 		int searchByName() {
 			
@@ -273,12 +278,39 @@ int intakeData(char *fileName) {
 					}
 				}    	if ( i == numLines && found != 1) {
 							printf("\nNo airport with name \"%s\" found.\n", userInput);
+						
 					}
+			}
+			
+			if (strcmp(userInput, "0") == 0) {
+				searchMenu();
 			}
 			
 		
 		}
 	
+	
+	void searchMenu() {
+		
+		int option;
+		
+		if (opened >= 1) {
+			printf("\n****************************************\n");	
+		}
+		printf("1. Search by ID\n");
+		printf("2. Search by name\n");
+	
+		opened++;
+		
+		printf("\nWhich search would you like to use: ");
+		scanf("%d", &option);
+		
+			switch (option) {
+				case 1:	searchById();
+				case 2: searchByName();
+				//case 3: searchByCity();
+			}
+	}
 
 	void main() {
 		
@@ -290,17 +322,9 @@ int intakeData(char *fileName) {
 		
 		//binaryData(datFile, lineCount);
 		
-
-		printf("1. Search by ID\n");
-		printf("2. Search by name\n");
+		searchMenu();
 		
-		printf("\nWhich search would you like to use: ");
-		scanf("%d", &option);
-		
-			switch (option) {
-				case 1:	searchById();
-				case 2: searchByName();
-			}
+	
 		
 	}
 	
