@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdbool.h>
+#include <ctype.h>
 
 struct airport {
 		int ID;
@@ -23,7 +23,9 @@ struct airport {
 
 struct airport airportArr[7543];
 
-struct airport *first, *current, *last;
+struct airport *first, *current, *last;   
+
+int numLines = 0;
 
 
 int intakeData(char *fileName) {
@@ -36,7 +38,7 @@ int intakeData(char *fileName) {
 	  	printf("Error opening file!");
 	  } else {
 		
-		int i, numLines = 0;  
+		int i; 
 		char lineRaw[300];  
 		char latString[20], longString[20], timezoneString[3];
 			
@@ -143,8 +145,7 @@ int intakeData(char *fileName) {
 						airportArr[i].source); */
 						
 			}
-			
-			return numLines;
+		
 			fclose(fptr);
 					
 		} 
@@ -194,7 +195,7 @@ int intakeData(char *fileName) {
 				
 	}   */
 	
-		int searchById(int numLines) {
+		int searchById() {
 			
 			int userInput = 1;
 			int i, found = 0;
@@ -205,6 +206,7 @@ int intakeData(char *fileName) {
 				
 				printf("\nEnter an ID to search: ");
 				scanf("%d", &userInput);
+				found = 0;
 				
 				for (i = 0; i < numLines; i++ ) {
 					if (airportArr[i].ID == userInput) {
@@ -224,22 +226,57 @@ int intakeData(char *fileName) {
 						airportArr[i].type, 
 						airportArr[i].source);
 						printf("\n****************************************");
-						found = 1;
-						
-					}
-					
-					if ( i == (numLines - 1) && found == 0) {
-						printf("No airport with ID \"%d\" found.\n", userInput);
+						found = 1;	
 					}
 				}
+				
+					if ( i == numLines && found != 1) {
+						printf("\nNo airport with ID \"%d\" found.\n", userInput);
+					}
 			} 
 			
 			
 			
 		}
 		
-		int searchByName(int numLines) {
-			printf("\nYuppa search by name");
+		int searchByName() {
+			
+			int i, found = 0;
+			char userInput[40] = "";
+			
+			printf("****************************************");
+			
+			while (userInput != "0") {
+				printf("\n\nEnter an airport name (0 to exit):");
+				scanf(" %[^\n]s", userInput);
+				
+				
+				for (i = 0; i < numLines; i++) {
+					if ( strcmpi(userInput, airportArr[i].name) == 0 ) {
+						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+						airportArr[i].ID, 
+						airportArr[i].name,
+						airportArr[i].city,
+						airportArr[i].country, 
+						airportArr[i].IATA, 
+						airportArr[i].ICAO,
+						airportArr[i].latitude, 
+						airportArr[i].longitude, 
+						airportArr[i].altitude,
+						airportArr[i].timezone, 
+						airportArr[i].DST, 
+						airportArr[i].olsenTimezone,
+						airportArr[i].type, 
+						airportArr[i].source);
+						printf("\n****************************************");
+						found = 1;
+					}
+				}    	if ( i == numLines && found != 1) {
+							printf("\nNo airport with name \"%s\" found.\n", userInput);
+					}
+			}
+			
+		
 		}
 	
 
@@ -250,7 +287,6 @@ int intakeData(char *fileName) {
 		int option;
 		
 		intakeData(file);
-		int lineCount = intakeData(file);
 		
 		//binaryData(datFile, lineCount);
 		
@@ -262,8 +298,8 @@ int intakeData(char *fileName) {
 		scanf("%d", &option);
 		
 			switch (option) {
-				case 1:	searchById(lineCount);
-				case 2: searchByName(lineCount);
+				case 1:	searchById();
+				case 2: searchByName();
 			}
 		
 	}
