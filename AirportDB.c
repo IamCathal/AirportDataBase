@@ -236,13 +236,19 @@ int intakeData(char *fileName) {
 						if (userInput == 0) {
 							searchMenu();
 						} 	else {
-							printf("\nNo airport with ID \"%d\" found.\n", userInput);
+							
 						}
 						
 						
 					}	
 			} 
-	}
+				 
+					if (strcmp(userInput, "0") == 0) {
+					searchMenu();
+			}
+			
+			
+		}
 		
 		int searchByName() {
 			
