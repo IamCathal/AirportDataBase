@@ -9,3 +9,4 @@ I am using a database file from [OpenFlights](https://openflights.org/data.html)
 * A searching system that suggests similar results to the input entered by the user and not only exact results which can often be hard to find.
 * Implement a linked list system for practice.
 * Possibly update the program to support other datafiles from OpenFlights. There is a similar file that has a database file of airports, train stations and ferry terminals.
+* ~~Implement a function where a user can enter a set of coordinates and see if there is any other airports in a specific radius surrounding it.
