@@ -196,7 +196,7 @@ int intakeData(char *fileName) {
 				
 	}   */
 	
-		int searchById() {
+		void searchById() {
 			
 			int userInput = 1;
 			int i, found = 0;
@@ -236,21 +236,20 @@ int intakeData(char *fileName) {
 						if (userInput == 0) {
 							searchMenu();
 						} 	else {
-							
+							printf("\nNo airport with ID \"%s\" found.\n", userInput);
 						}
 						
 						
 					}	
 			} 
 				 
-					if (strcmp(userInput, "0") == 0) {
-					searchMenu();
+					
 			}
 			
 			
-		}
+	
 		
-		int searchByName() {
+		void searchByName() {
 			
 			int i, found = 0;
 			char userInput[40] = "";
@@ -282,10 +281,12 @@ int intakeData(char *fileName) {
 						printf("\n****************************************");
 						found = 1;
 					}
-				}    	if ( i == numLines && found != 1) {
-							printf("\nNo airport with name \"%s\" found.\n", userInput);
-						
-					}
+				}    		if ( i == numLines && found != 1) { 
+						if (userInput == 0) {
+							searchMenu();
+						} 	else {
+							printf("\nNo airport with ID \"%s\" found.\n", userInput);
+						}
 			}
 			
 			if (strcmp(userInput, "0") == 0) {
@@ -294,9 +295,58 @@ int intakeData(char *fileName) {
 			
 		
 		}
+		
+}
+
+	void searchByCity() {
+		   	int i, found = 0;
+			char userInput[40] = "";
+			
+			printf("****************************************");
+			
+			while (userInput != "0") {
+				printf("\n\nEnter a city (0 to exit):");
+				scanf(" %[^\n]s", userInput);
+				
+				
+				for (i = 0; i < numLines; i++) {
+					if ( strcmpi(userInput, airportArr[i].city) == 0 ) {
+						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+						airportArr[i].ID, 
+						airportArr[i].name,
+						airportArr[i].city,
+						airportArr[i].country, 
+						airportArr[i].IATA, 
+						airportArr[i].ICAO,
+						airportArr[i].latitude, 
+						airportArr[i].longitude, 
+						airportArr[i].altitude,
+						airportArr[i].timezone, 
+						airportArr[i].DST, 
+						airportArr[i].olsenTimezone,
+						airportArr[i].type, 
+						airportArr[i].source);
+						printf("\n****************************************");
+						found = 1;
+					}
+				}    		if ( i == numLines && found != 1) { 
+						if (userInput == 0) {
+							searchMenu();
+						} 	else {
+							printf("\nNo airport with city \"%s\" found.\n", userInput);
+						}
+			}
+			
+			if (strcmp(userInput, "0") == 0) {
+				searchMenu();
+			}
+			
+		
+		}
+	}
 	
 	
-	void searchMenu() {
+	int searchMenu() {
 		
 		int option;
 		
@@ -304,7 +354,8 @@ int intakeData(char *fileName) {
 			printf("\n****************************************\n");	
 		}
 		printf("1. Search by ID\n");
-		printf("2. Search by name\n");
+		printf("2. Search by name\n");    
+		printf("3. Search by city\n");
 	
 		opened++;
 		
@@ -314,7 +365,7 @@ int intakeData(char *fileName) {
 			switch (option) {
 				case 1:	searchById();
 				case 2: searchByName();
-				//case 3: searchByCity();
+				case 3: searchByCity();
 			}
 	}
 
