@@ -201,30 +201,34 @@ int intakeData(char *fileName) {
 			} 			
 		}
 		
-	double degRad(double degreeIn) {
-		return (degreeIn * PI / 180 );
-	}	
-	
-	double radDeg(double radIn) {
-		return ( radIn * 180 / PI);
+	double degreesToRadians(double degrees) {
+		return (degrees * PI / 180);
 	}
+	
+	double radiansToDegrees(double radians) {
+		return (radians * 180 / PI);
+	}
+	
+	double coordDistance(double latitudeSearch, double longitudeSearch, double latitudeCurr, double longitudeCurr) {
 		
-			
-	double CoordDistance(double latInput, double longInput, double latCurrent, double longCurrent) {
-		double theta, distance;
+		latitudeSearch = degreesToRadians(latitudeSearch);
+		longitudeSearch = degreesToRadians(longitudeSearch);
+		latitudeCurr = degreesToRadians(latitudeCurr);
+		longitudeCurr = degreesToRadians(longitudeCurr);
 		
-		theta = longInput - longCurrent;
-		distance = sin( degRad(latInput) ) * sin( degRad(latCurrent) )  + cos ( degRad(latInput) ) + cos( degRad(latCurrent) ) * cos( degRad( theta ) );
+		long double longDist = longitudeCurr - longitudeSearch;
+		long double latDist = latitudeCurr - latitudeSearch;
 		
-		distance = acos(distance);
-		distance = radDeg(distance);
-		distance = distance * 60 * 1.1515;
+		long double distance = pow( sin(latDist / 2), 2 ) + cos( latitudeSearch) * cos( latitudeCurr) * pow( sin(longDist / 2), 2);
 		
-		distance = distance * 1.609344;
+		distance = 2 * asin( sqrt(distance) );
+		
+		distance = distance * 6371;
 		
 		return(distance);
+	}
 	
-	}		
+		
 	
 	void searchFunction(char *searchType) {
 		
@@ -295,41 +299,66 @@ int intakeData(char *fileName) {
 	
 	void searchCoords() {
 	
-	int i;	
-	char userInput[20];
+	int i, found = 0, userDistance = 0;
+	char userInput[20];	
 	double latitudeInput, longitudeInput;
 	double latitudeCurr, longitudeCurr;		
 			
-			
-			printf("Please enter the latitude and longitude (decimal degrees): ");
+			while (userInput != 0) {
+				
+				printf("Please enter the latitude and longitude (decimal degrees, 0 to exit): ");
 				scanf(" %[^\n]s", userInput);
+				
+				//printf("Please enter radius of the circle in km to search: ");
+				//scanf("%d", &userDistance);
+				
+				if (strcmp(userInput, "0") == 0) {
+				searchMenu();
+			}
 				
 			char *token;
 			char delim[2] = " ";
 			
 			double seperation = 0;
-		
-			
-				  
+	
 				 token = strtok(userInput, delim);
 				 	latitudeInput = atof(token); 
 				 
 				 token = strtok(NULL, delim);
 				 	longitudeInput = atof(token);
 				 	
-				   for (i = 0; i < numLines; i++) {
-						latitudeCurr = airportArr[i].latitude;
-						longitudeCurr = airportArr[i].longitude;
+				 	printf("\n");
+				 	
+				 	for( i = 0; i < numLines; i++) {
+				 		latitudeCurr = airportArr[i].latitude;
+				 		longitudeCurr = airportArr[i].longitude;
+				 		
+				 		seperation = coordDistance(latitudeInput, longitudeInput, latitudeCurr, longitudeCurr);
+				 		
+				 		if ( seperation < 100 ) {
+				 			printf("%s in %s is %.0lfkm away from your coordinates.\n", airportArr[i].name, airportArr[i].city, seperation);
+						 	found++;
+						 }
+				 		
+				 	//	printf("Search: %.2f %.2f\nCurent:%.2f %.2f\nSeperation:%.2f\n\n",latitudeInput, longitudeInput, latitudeCurr, longitudeCurr, seperation);
+					 }
+					 
+					 if ( i == numLines && found < 1) { 
+						if (userInput == 0) {
+							searchMenu();
+						} 	else {
+							printf("\nNo airports within %d km  found.\n", userDistance);
+						}
 						
-						seperation = CoordDistance(latitudeInput, longitudeInput, latitudeCurr, longitudeCurr);
 						
-						
-							if ( seperation < 100 && seperation > -100 ) {
-								printf("The following airports are within 100km of your coordinates:\n");
-								  printf("%s\n", airportArr[i].name);
-							} 
-				   }
-	}
+					}
+					
+					printf("\n****************************************\n");	
+			}
+			
+							
+		}
+	
 
 	
 	int searchMenu() {
