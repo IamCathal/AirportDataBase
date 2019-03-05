@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 
+#define PI  3.14159265358979324
+
 struct airport {
 		int ID;
 		char name[30];
@@ -18,12 +20,9 @@ struct airport {
 		char olsenTimezone[30];
 		char type[15];
 		char source[20];
-		struct airport *next;
 };
 
-struct airport airportArr[7543];
-
-struct airport *first, *current, *last;   
+struct airport airportArr[7543];  
 
 int numLines = 0;
 int opened = 0;
@@ -153,49 +152,6 @@ int intakeData(char *fileName) {
 }
 
 
-/*	int binaryData(char *fileName, int numLines) {
-		
-		FILE *fptr;
-		int i;
-		
-		fptr = fopen("airportDBDAT.dat", "wb+");
-			
-				for (i = 0; i < numLines; i++) {
-					fwrite(&airportArr[i], sizeof(struct airport), 1, fptr);
-				}
-				
-				fclose(fptr);
-				
-				fptr = fopen("airportDBDAT.dat", "rb");
-		
-				first = current = last = NULL;
-				i = 0;
-				
-				while (!feof(fptr)) {
-					current = (struct airport*) malloc ( sizeof( struct airport ) );
-					
-					fread(current, sizeof( struct airport ), 1, fptr);
-					i++;
-					
-					if (first == NULL) {
-						first = last;
-						current = last;
-					}
-					
-					else {
-						if ( i = (numLines - 1) )
-						last->next = current;
-						last = current;
-						current->next = NULL;
-					}
-				}	
-			
-				//printf("\nCurrent name: %s", first->ID);
-				printf("yuppa");
-		
-				
-	}   */
-	
 		void searchById() {
 			
 			int userInput = 1;
@@ -243,10 +199,34 @@ int intakeData(char *fileName) {
 					}	
 			} 			
 		}
+		
+	double degRad(double degreeIn) {
+		return (degreeIn * PI / 180 );
+	}	
+	
+	double radDeg(double radIn) {
+		return ( radIn * 180 / PI);
+	}
+		
 			
-			
+	double CoordDistance(double latInput, double longInput, double latCurrent, double longCurrent) {
+		double theta, distance;
+		
+		theta = longInput - longCurrent;
+		distance = sin( degRad(latInput) ) * sin( degRad(latCurrent) )  + cos ( degRad(latInput) ) + cos( degRad(latCurrent) ) * cos( degRad( theta ) );
+		
+		distance = acos(distance);
+		distance = radDeg(distance);
+		distance = distance * 60 * 1.1515;
+		
+		distance = distance * 1.609344;
+		
+		return(distance);
+	
+	}		
 	
 	void searchFunction(char *searchType) {
+		
 			int i, found = 0;
 			char userInput[40] = "";
 			
@@ -255,11 +235,19 @@ int intakeData(char *fileName) {
 			while (userInput != "0") {
 				if ( strcmp(searchType, "name") == 0) { printf("\n\nEnter an airport name (0 to exit):"); }
 				else if (strcmp (searchType, "city")== 0) { printf("\n\nEnter a city (0 to exit):");}		
+					else if (strcmp (searchType, "country")== 0) { printf("\n\nEnter a country (0 to exit):");}		
+						else if (strcmp (searchType, "IATA")== 0) { printf("\n\nEnter an IATA (0 to exit):");}
+							else if (strcmp (searchType, "ICAO")== 0) { printf("\n\nEnter an ICAO (0 to exit):");}
+						
+						
 						scanf(" %[^\n]s", userInput);
 				
 				
 				for (i = 0; i < numLines; i++) {
-					if ( strcmpi(userInput, airportArr[i].city) == 0 ||  strcmpi(userInput, airportArr[i].name) == 0 ) {
+					if ( strcmpi(userInput, airportArr[i].city) == 0 ||  strcmpi(userInput, airportArr[i].name) == 0 || 
+						strcmpi(userInput, airportArr[i].country) == 0 || strcmpi(userInput, airportArr[i].IATA) == 0 ||
+						strcmpi(userInput, airportArr[i].ICAO) == 0 ) {
+							
 						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
 						airportArr[i].ID, 
 						airportArr[i].name,
@@ -286,6 +274,12 @@ int intakeData(char *fileName) {
 								printf("\nNo airport with name \"%s\" found.\n", userInput);	
 							} else  if ( strcmp(searchType, "city") == 0) {
 								printf("\nNo airport with city \"%s\" found.\n", userInput);	
+							} else  if ( strcmp(searchType, "country") == 0) {
+								printf("\nNo airport with country \"%s\" found.\n", userInput);	
+							} else  if ( strcmp(searchType, "IATA") == 0) {
+								printf("\nNo airport with IATA \"%s\" found.\n", userInput);	
+							} else  if ( strcmp(searchType, "ICAO") == 0) {
+								printf("\nNo airport with ICAO \"%s\" found.\n", userInput);	
 							}
 						}
 			}
@@ -297,14 +291,50 @@ int intakeData(char *fileName) {
 		
 		}
 	}
-
 	
+	void searchCoords() {
+	
+	int i;	
+	char userInput[20];
+	double latitudeInput, longitudeInput;
+	double latitudeCurr, longitudeCurr;		
+			
+			
+			printf("Please enter the latitude and longitude (decimal degrees): ");
+				scanf(" %[^\n]s", userInput);
+				
+			char *token;
+			char delim[2] = " ";
+			
+			double seperation = 0;
+		
+			
+				  
+				 token = strtok(userInput, delim);
+				 	latitudeInput = atof(token); 
+				 
+				 token = strtok(NULL, delim);
+				 	longitudeInput = atof(token);
+				 	
+				   for (i = 0; i < numLines; i++) {
+						latitudeCurr = airportArr[i].latitude;
+						longitudeCurr = airportArr[i].longitude;
+						
+						seperation = CoordDistance(latitudeInput, longitudeInput, latitudeCurr, longitudeCurr);
+						
+						
+							if ( seperation < 100 && seperation > -100 ) {
+								printf("The following airports are within 100km of your coordinates:\n");
+								  printf("%s\n", airportArr[i].name);
+							} 
+				   }
+	}
+
 	
 	int searchMenu() {
 		
 		int option;
-		char nameString[] = "name";
-		char cityString[] = "city";
+	
 		
 		if (opened >= 1) {
 			printf("\n****************************************\n");	
@@ -312,6 +342,10 @@ int intakeData(char *fileName) {
 		printf("1. Search by ID\n");
 		printf("2. Search by name\n");    
 		printf("3. Search by city\n");
+		printf("4. Search by country\n");
+		printf("5. Search by IATA\n");
+		printf("6. Search by ICAO\n");
+		printf("7. Search by Lattitude/Longitude\n");
 	
 		opened++;
 		
@@ -320,8 +354,14 @@ int intakeData(char *fileName) {
 		
 			switch (option) {
 				case 1:	searchById();
-				case 2: searchFunction(nameString);
-				case 3: searchFunction(cityString);
+				case 2: searchFunction("name");
+				case 3: searchFunction("city");
+				case 4: searchFunction("country");
+				case 5: searchFunction("IATA");
+				case 6: searchFunction("ICAO");
+				case 7: searchCoords();
+	
+				
 			}
 	}
 
