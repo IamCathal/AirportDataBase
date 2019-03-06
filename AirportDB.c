@@ -299,7 +299,7 @@ int intakeData(char *fileName) {
 	
 	void searchCoords() {
 	
-	int i, found = 0, userDistance = 0;
+	int i, found = 0, userDistance;
 	char userInput[20];	
 	double latitudeInput, longitudeInput;
 	double latitudeCurr, longitudeCurr;		
@@ -309,8 +309,9 @@ int intakeData(char *fileName) {
 				printf("Please enter the latitude and longitude (decimal degrees, 0 to exit): ");
 				scanf(" %[^\n]s", userInput);
 				
-				//printf("Please enter radius of the circle in km to search: ");
-				//scanf("%d", &userDistance);
+				printf("Please enter radius of the circle in km to search: ");
+				scanf("%d", &userDistance);
+				
 				
 				if (strcmp(userInput, "0") == 0) {
 				searchMenu();
@@ -335,7 +336,7 @@ int intakeData(char *fileName) {
 				 		
 				 		seperation = coordDistance(latitudeInput, longitudeInput, latitudeCurr, longitudeCurr);
 				 		
-				 		if ( seperation < 100 ) {
+				 		if ( seperation < userDistance ) {
 				 			printf("%s in %s is %.0lfkm away from your coordinates.\n", airportArr[i].name, airportArr[i].city, seperation);
 						 	found++;
 						 }
