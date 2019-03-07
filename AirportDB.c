@@ -39,11 +39,12 @@ int intakeData(char *fileName) {
 	  	printf("Error opening file!");
 	  } else {
 		
-		int i; 
-		char lineRaw[300];  
-		char latString[20], longString[20], timezoneString[3];
+		int i;
+		 
+		char lineRaw[300]; // Variable to get a whole line in the file 
 		
-		// Gets number of lines from the file	
+		char latString[20], longString[20], timezoneString[3]; // Stores the latitude, longitude and timezones in strings before being converted
+			
 		while (!feof(fptr)) {
 			ch = fgetc(fptr);
 			if (ch == '\n') {
@@ -72,8 +73,9 @@ int intakeData(char *fileName) {
 					
 					token = strtok(NULL, delim);
 						strcpy(airportArr[i].country, token);
-					
-					// As stated above, if the data is "\N" it is replaced with "na".
+						
+					/* If the string is "empty" (\N), it is replaced with the string  "na" */	
+						
 					token = strtok(NULL, delim);
 						if (strcmp(token, "\\N") == 0) {
 							strcpy(airportArr[i].IATA, noInfoString); 
@@ -126,7 +128,7 @@ int intakeData(char *fileName) {
 						} else {
 							strcpy(airportArr[i].source, token); 
 						}
-						
+										
 			}
 		
 			fclose(fptr);
@@ -172,9 +174,11 @@ int intakeData(char *fileName) {
 					
 				
 					if ( i == numLines && found != 1) { 
+					/* If the search has gone atleast once and the input is 0 it goes back to search menu */
 						if (userInput == 0) {
 							searchMenu();
 						} 	else {
+					/* If the search has gone atleast once and nothing was found it tells the user */
 							printf("\nNo airport with ID \"%s\" found.\n", userInput);
 						}
 						
@@ -193,13 +197,13 @@ int intakeData(char *fileName) {
 	
 	double coordDistance(double latitudeSearch, double longitudeSearch, double latitudeCurr, double longitudeCurr) {
 		
-		latitudeSearch = degreesToRadians(latitudeSearch);
-		longitudeSearch = degreesToRadians(longitudeSearch);
-		latitudeCurr = degreesToRadians(latitudeCurr);
-		longitudeCurr = degreesToRadians(longitudeCurr);
+		latitudeSearch = degreesToRadians(latitudeSearch); // latitudeSearch is the user entered latitude
+		longitudeSearch = degreesToRadians(longitudeSearch); // longitudeSearch is the user entered longitude
+		latitudeCurr = degreesToRadians(latitudeCurr);   // latitudeCurr is the latitude of the current entry being compared against
+		longitudeCurr = degreesToRadians(longitudeCurr);  // longitudeCurr is the longitude of the current entry being compared against
 		
-		long double longDist = longitudeCurr - longitudeSearch;
-		long double latDist = latitudeCurr - latitudeSearch;
+		long double longDist = longitudeCurr - longitudeSearch; // Total longitudanal distance
+		long double latDist = latitudeCurr - latitudeSearch;  // Total latitudinal distance
 		
 		long double distance = pow( sin(latDist / 2), 2 ) + cos( latitudeSearch) * cos( latitudeCurr) * pow( sin(longDist / 2), 2);
 		
@@ -209,8 +213,7 @@ int intakeData(char *fileName) {
 		
 		return(distance); // Returns the actual displacement between airports, complicated since it calculates the distance on a sphere.
 	}
-	
-		
+
 	
 	void searchFunction(char *searchType) {
 		
@@ -219,8 +222,9 @@ int intakeData(char *fileName) {
 			
 			printf("****************************************");
 			
-			// To reduce redundant code, all string search functions are handled in this function 
 			
+			/* To decrease redundant code, this function deals with searching for all string searches using
+			a series of else if statements */
 			while (userInput != "0") {
 				if ( strcmp(searchType, "name") == 0) { printf("\n\nEnter an airport name (0 to exit):"); }
 				else if (strcmp (searchType, "city")== 0) { printf("\n\nEnter a city (0 to exit):");}		
@@ -229,10 +233,11 @@ int intakeData(char *fileName) {
 							else if (strcmp (searchType, "ICAO")== 0) { printf("\n\nEnter an ICAO (0 to exit):");}
 						
 						
-						scanf(" %[^\n]s", userInput);
+						scanf(" %[^\n]s", userInput);  // Reads up until the enter key is pressed which can let the user type in multiple words.
 				
 				int count = 0;
 				for (i = 0; i < numLines; i++) {
+					/* If the respected match is found it prints out the airport information */
 					if ( strcmpi(userInput, airportArr[i].city) == 0 ||  strcmpi(userInput, airportArr[i].name) == 0 || 
 						strcmpi(userInput, airportArr[i].country) == 0 || strcmpi(userInput, airportArr[i].IATA) == 0 ||
 						strcmpi(userInput, airportArr[i].ICAO) == 0 ) {
@@ -280,7 +285,7 @@ int intakeData(char *fileName) {
 							}
 						}
 			}
-			
+			 /* If input is 0 the program returns to the search menu */
 			if (strcmp(userInput, "0") == 0) {
 				searchMenu();
 			}
@@ -328,6 +333,7 @@ int intakeData(char *fileName) {
 				 			printf("%s in %s is %.0lfkm away from your coordinates.\n", airportArr[i].name, airportArr[i].city, seperation);
 						 	found++;
 						 }
+				 		
 				 		
 					 }
 					 // If unsuccessful in it's search, inform the user
@@ -390,10 +396,6 @@ int intakeData(char *fileName) {
 		intakeData(file);
 		
 		searchMenu();
-		
-	
-		
+			
 	}
 	
-	
-
