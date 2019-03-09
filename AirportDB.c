@@ -317,7 +317,7 @@ int intakeData(char *fileName) {
 			
 			while (userInput != 0) {
 				
-				printf("Please enter the latitude and longitude (decimal degrees, 0 to exit): ");
+				printf("Please enter an airport: ");
 					scanf(" %[^\n]s", userInput);
 				
 				printf("Please enter a search radius (0 to exit): ");
@@ -339,12 +339,12 @@ int intakeData(char *fileName) {
 			
 			double seperation = 0; // Holds the value for the actual displacement between the two sets of coordinates in comparison to eachother
 	
-				 token = strtok(userInput, delim);
-				 	latitudeInput = atof(token); 
-				 
-				 token = strtok(NULL, delim);
-				 	longitudeInput = atof(token);
-				 
+				 for (i = 0; i < numLines; i++) {
+				 	if (strcmpi(userInput, airportArr[i].name) == 0) {
+				 		latitudeInput = airportArr[i].latitude;
+				 		longitudeInput = airportArr[i].longitude;
+					 }
+				 }
 				 	printf("\n");
 				 	
 				 	for( i = 0; i < numLines; i++) {
@@ -424,7 +424,7 @@ int intakeData(char *fileName) {
 		printf("4. Search by country\n");
 		printf("5. Search by IATA\n");
 		printf("6. Search by ICAO\n");
-		printf("7. Search by Lattitude/Longitude\n");
+		printf("7. Search for airports near an airport\n");
 	
 		opened++;
 		
