@@ -6,10 +6,11 @@
 
 #define PI  3.14159265358979324
 
+void searchMenu();
 struct airport {
 		int ID;
 		char name[40];
-		char city[30];
+		char city[20];
 		char country[40];
 		char IATA[5];
 		char ICAO[5];
@@ -23,7 +24,18 @@ struct airport {
 		char source[20];
 };
 
-struct airport airportArr[7543];  
+struct nearbyAirport {
+	char name[40];
+	char city[30];
+	double distance;
+};
+
+
+struct airport airportArr[7543]; 
+
+struct nearbyAirport nearbyAirportArr[400];
+
+struct nearbyAirport swap;
 
 int numLines = 0;
 int opened = 0;
@@ -179,7 +191,7 @@ int intakeData(char *fileName) {
 							searchMenu();
 						} 	else {
 					/* If the search has gone atleast once and nothing was found it tells the user */
-							printf("\nNo airport with ID \"%s\" found.\n", userInput);
+							printf("\nNo airport with ID \"%d\" found.\n", userInput);
 						}
 						
 						
@@ -225,7 +237,7 @@ int intakeData(char *fileName) {
 			
 			/* To decrease redundant code, this function deals with searching for all string searches using
 			a series of else if statements */
-			while (userInput != "0") {
+			while (strcmp(userInput, "0") != 0 ) {
 				if ( strcmp(searchType, "name") == 0) { printf("\n\nEnter an airport name (0 to exit):"); }
 				else if (strcmp (searchType, "city")== 0) { printf("\n\nEnter a city (0 to exit):");}		
 					else if (strcmp (searchType, "country")== 0) { printf("\n\nEnter a country (0 to exit):");}		
@@ -296,19 +308,31 @@ int intakeData(char *fileName) {
 	
 	void searchCoords() {
 	
-	int i, found = 0, userDistance = 0;
-	char userInput[30];	
+	int i, k, found = 0; 
+	double userDistance;
+	char userInput[40];	
 	double latitudeInput, longitudeInput; // latitudeInput and longitudeInput are the users coordinates that are entered
-	double latitudeCurr, longitudeCurr;	// latitudeCurr and longitudeCurr are the coordinates to be comapared against for each repitition of the searching for loop	
+	double latitudeCurr, longitudeCurr;	// latitudeCurr and longitudeCurr are the coordinates to be comapared against for each repitition of the searching for loop
+
 			
 			while (userInput != 0) {
 				
 				printf("Please enter the latitude and longitude (decimal degrees, 0 to exit): ");
-				scanf(" %[^\n]s", userInput);
+					scanf(" %[^\n]s", userInput);
+				
+				printf("Please enter a search radius (0 to exit): ");
+					scanf(" %lf", &userDistance);
+						
+						while ( userDistance > 1000) {
+							printf("\nRadius too large, please enter a value under 500.\n");
+							printf("Please enter a search radius (0 to exit): ");
+								scanf(" %lf", &userDistance);
+						}
 		
 				if (strcmp(userInput, "0") == 0) {
 				searchMenu();
-			}
+			} 
+		
 				
 			char *token;
 			char delim[2] = " ";
@@ -320,7 +344,7 @@ int intakeData(char *fileName) {
 				 
 				 token = strtok(NULL, delim);
 				 	longitudeInput = atof(token);
-				 	
+				 
 				 	printf("\n");
 				 	
 				 	for( i = 0; i < numLines; i++) {
@@ -328,12 +352,43 @@ int intakeData(char *fileName) {
 				 		longitudeCurr = airportArr[i].longitude;
 				 		
 				 		seperation = coordDistance(latitudeInput, longitudeInput, latitudeCurr, longitudeCurr);
-				 		// If the coordinates are within 100km and it is not the coordinates of an existing airport (0km away) print this airport's information
-				 		if ( seperation < 100 && seperation != 0) {
-				 			printf("%s in %s is %.0lfkm away from your coordinates.\n", airportArr[i].name, airportArr[i].city, seperation);
-						 	found++;
-						 }
+				 		// If the coordinates are within userDistance and it is not the coordinates of an existing airport (0km away) print this airport's information
 				 		
+				 			// Fills array of structures of nearby airports, max 400 due to logic
+					 		if ( seperation < userDistance && seperation > 2) {
+					 			strcpy(nearbyAirportArr[found].name, airportArr[i].name);
+					 			strcpy(nearbyAirportArr[found].city, airportArr[i].city);
+					 			nearbyAirportArr[found].distance = seperation;
+							 	found++;
+							 }
+							 
+					 }
+					 
+					// Bubble sort to sort out these in ascending order 
+					for ( i = 0; i < found - 1; i++) {
+						
+							for (k = 0; k < found - 1 - i; k++) {
+								if (nearbyAirportArr[k].distance > nearbyAirportArr[k + 1].distance) {
+									swap = nearbyAirportArr[k];
+									nearbyAirportArr[k] = nearbyAirportArr[k+1];
+									nearbyAirportArr[k+1] = swap;
+								}
+							}
+					}
+					
+						printf("\n****************************************\n");	
+						//  Prints the results in a nice format, must make the terminal screen big for this to be viewed correctly
+						 printf("\n");
+
+						 printf("%40s%17s     %s\n", "Airport", "City", "Distance");
+						 printf("%40s%17s     %s\n", "=======", "====", "========");
+						 
+						 for (i = 0; i < found; i++) {
+						 	printf("%40s%21s     %.0lfkm\n", nearbyAirportArr[i].name, nearbyAirportArr[i].city, nearbyAirportArr[i].distance);
+						 }		 printf("\n");
+						 
+					
+				 	printf("\n****************************************\n");	
 				 		
 					 }
 					 // If unsuccessful in it's search, inform the user
@@ -351,13 +406,13 @@ int intakeData(char *fileName) {
 			}
 			
 							
-		}
+
 	
 
 	
-	int searchMenu() {
+	void searchMenu() {
 		
-		int option;
+		int option = 0;
 	
 		// This function handles the search menu interface and links to all other functions	
 		if (opened >= 1) {
@@ -388,6 +443,8 @@ int intakeData(char *fileName) {
 				
 			}
 	}
+	
+	
 
 	void main() {
 		
