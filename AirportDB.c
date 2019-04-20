@@ -7,6 +7,7 @@
 #define PI  3.14159265358979324
 
 void searchMenu();
+
 struct airport {
 		int ID;
 		char name[40];
@@ -64,7 +65,7 @@ int intakeData(char *fileName) {
 	
 			char *token;
 			char delim[3] = ",\"";
-			char noInfoString[2] = "na"; 
+			char noInfoString[3] = "na"; 
 			
 			for (i = 0 ; i < numLines; i++) {
 				
@@ -159,7 +160,6 @@ void searchById() {
 				
 		for (i = 0; i < numLines; i++ ) {
 			if (airportArr[i].ID == userInput) {
-				printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
 				airportArr[i].ID, 
 				airportArr[i].name,
 				airportArr[i].city,
@@ -252,7 +252,7 @@ double coordDistance(double latitudeSearch, double longitudeSearch, double latit
 						
 						count++;
 						
-						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
+						printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTimezone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
 						airportArr[i].ID, 
 						airportArr[i].name,
 						airportArr[i].city,
@@ -381,7 +381,9 @@ double coordDistance(double latitudeSearch, double longitudeSearch, double latit
 						 
 						 for (i = 0; i < found; i++) {
 						 	printf("%40s%21s     %.0lfkm\n", nearbyAirportArr[i].name, nearbyAirportArr[i].city, nearbyAirportArr[i].distance);
-						 }		 printf("\n");
+						 }		
+						 
+						 printf("\n%d airports found within a %.2lfkm", found, userDistance);
 						 
 					
 				 	printf("\n****************************************\n");	
