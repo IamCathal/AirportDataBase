@@ -160,6 +160,7 @@ void searchById() {
 				
 		for (i = 0; i < numLines; i++ ) {
 			if (airportArr[i].ID == userInput) {
+				printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTimezone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
 				airportArr[i].ID, 
 				airportArr[i].name,
 				airportArr[i].city,
