@@ -167,19 +167,19 @@ void searchById() {
         found = 0;
 
         for (i = 0; i < numLines; i++) {
-            if (airportArr[i].ID == userInput) {
+            if (airportArr[i]->ID == userInput) {
                 printf(
                     "\n****************************************\nID: %d\nName: "
                     "%s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: "
                     "%lf\nLongitude: %lf\nAltitude: %d\nTiemzone: %d\nDST: "
                     "%s\nO-Timezone: %s\nType: %s\nSource: %s\n",
-                    airportArr[i].ID, airportArr[i].name, airportArr[i].city,
-                    airportArr[i].country, airportArr[i].IATA,
-                    airportArr[i].ICAO, airportArr[i].latitude,
-                    airportArr[i].longitude, airportArr[i].altitude,
-                    airportArr[i].timezone, airportArr[i].DST,
-                    airportArr[i].olsenTimezone, airportArr[i].type,
-                    airportArr[i].source);
+                    airportArr[i]->ID, airportArr[i]->name, airportArr[i]->city,
+                    airportArr[i]->country, airportArr[i]->IATA,
+                    airportArr[i]->ICAO, airportArr[i]->latitude,
+                    airportArr[i]->longitude, airportArr[i]->altitude,
+                    airportArr[i]->timezone, airportArr[i]->DST,
+                    airportArr[i]->olsenTimezone, airportArr[i]->type,
+                    airportArr[i]->source);
                 printf("\n****************************************");
                 found = 1;
             }
@@ -199,77 +199,6 @@ void searchById() {
     }
 }
 
-double degreesToRadians(double degrees) { return (degrees * PI / 180); }
-
-double radiansToDegrees(double radians) { return (radians * 180 / PI); }
-
-double coordDistance(double latitudeSearch, double longitudeSearch,
-                     double latitudeCurr, double longitudeCurr) {
-    latitudeSearch = degreesToRadians( latitudeSearch); // latitudeSearch is the user entered latitude
-	longitudeSearch = degreesToRadians(longitudeSearch);// longitudeSearch is the user entered longitude
-    latitudeCurr = degreesToRadians(latitudeCurr);  	// latitudeCurr is the latitude of the current entry being compared against
-    longitudeCurr = degreesToRadians(longitudeCurr);  	// longitudeCurr is the longitude of the current entry
-                         								// being compared against
-
-    long double longDist = longitudeCurr - longitudeSearch;  // Total longitudanal distance
-    long double latDist = latitudeCurr - latitudeSearch;  // Total latitudinal distance
-
-    long double distance =
-        pow(sin(latDist / 2), 2) +
-        cos(latitudeSearch) * cos(latitudeCurr) * pow(sin(longDist / 2), 2);
-
-    distance = 2 * asin(sqrt(distance));
-
-    distance = distance * 6371;
-
-void searchById() {
-			
-	int userInput = 1;
-	int i, found = 0;
-		
-	printf("****************************************");
-			
-	while (userInput != 0) {
-				
-	printf("\nEnter an ID to search(0 to exit): ");
-	scanf("%d", &userInput);
-	found = 0;
-				
-		for (i = 0; i < numLines; i++ ) {
-			if (airportArr[i]->ID == userInput) {
-				printf("\n****************************************\nID: %d\nName: %s\nCity: %s\nCountry: %s\nIATA: %s\nICAO: %s\nLatitude: %lf\nLongitude: %lf\nAltitude: %d\nTimezone: %d\nDST: %s\nO-Timezone: %s\nType: %s\nSource: %s\n",
-				airportArr[i]->ID, 
-				airportArr[i]->name,
-				airportArr[i]->city,
-				airportArr[i]->country, 
-				airportArr[i]->IATA, 
-				airportArr[i]->ICAO,
-				airportArr[i]->latitude, 
-				airportArr[i]->longitude, 
-				airportArr[i]->altitude,
-				airportArr[i]->timezone, 
-				airportArr[i]->DST, 
-				airportArr[i]->olsenTimezone,
-				airportArr[i]->type, 
-				airportArr[i]->source);
-				printf("\n****************************************");
-				found = 1;	
-			}
-		}
-					
-				
-		if ( i == numLines && found != 1) { 
-		/* If the search has gone atleast once and the input is 0 it goes back to search menu */
-			if (userInput == 0) {
-				searchMenu();
-			} 	else {
-			/* If the search has gone atleast once and nothing was found it tells the user */
-				printf("\nNo airport with ID \"%d\" found->\n", userInput);
-			}		
-		}	
-	} 			
-}
-		
 double degreesToRadians(double degrees) {
 	return (degrees * PI / 180);
 }
@@ -277,6 +206,7 @@ double degreesToRadians(double degrees) {
 double radiansToDegrees(double radians) {
 	return (radians * 180 / PI);
 }
+
 	
 double coordDistance(double latitudeSearch, double longitudeSearch, double latitudeCurr, double longitudeCurr) {
 		
