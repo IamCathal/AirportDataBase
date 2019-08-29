@@ -387,6 +387,14 @@ void searchMenu() {
 		printf("\n****************************************\n");	
 	}
 	
+	printf("\n%s\n%s\n%s\n%s",
+	"    db    88 88\"\"Yb 88\"\"Yb  dP\"Yb  88\"\"Yb 888888 8888b.  88\"\"Yb",
+  "   dPYb   88 88__dP 88__dP dP   Yb 88__dP   88    8I  Yb 88__dP", 
+ "  dP__Yb  88 88\"Yb  88\"\"\"  Yb   dP 88\"Yb    88    8I  dY 88\"\"Yb",
+" dP\"\"\"\"Yb 88 88  Yb 88      YbodP  88  Yb   88   8888Y\"  88oodP\n");
+
+printf("\n**********************************************************************\n");	
+	
 	printf("1. Search by ID\n");
 	printf("2. Search by name\n");    
 	printf("3. Search by city\n");
@@ -394,7 +402,6 @@ void searchMenu() {
 	printf("5. Search by IATA\n");
 	printf("6. Search by ICAO\n");
 	printf("7. Search for airports near an airport\n");
-	/*	printf("Airstruct: %d bytes\nNearAirStruct: %d bytes\n", sizeof(airportArr), sizeof(nearbyAirportArr)); */
 	
 	opened++;
 		
